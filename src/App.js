@@ -5,6 +5,8 @@ import Loader from "./components/Loader";
 import Error from "./components/Error";
 import StartScreen from "./components/StartScreen";
 import Question from "./components/Question";
+import NextQuestion from "./components/NextQuestion";
+import Progress from "./components/Progress";
 
 const initialState = {
   questions: [],
@@ -34,15 +36,21 @@ const reducer = (state, action) => {
         status: "active",
       };
     case "newAnswer":
-      const question = state.questions[action.index];
+      const question = state.questions[state.index];
 
       return {
         ...state,
         answer: action.payload,
         points:
-          question.correctOptions === action.payload
+          question.correctOption === action.payload
             ? state.points + question.points
             : state.points,
+      };
+    case "nextQuestion":
+      return {
+        ...state,
+        index: state.index + 1,
+        answer: null,
       };
 
     default:
@@ -51,7 +59,7 @@ const reducer = (state, action) => {
 };
 
 function App() {
-  const [{ questions, status, index, answer }, dispatch] = useReducer(
+  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -59,6 +67,11 @@ function App() {
   const numberOfQuestions = useMemo(() => {
     return questions.length;
   }, [questions]);
+
+  const totalPoints = useMemo(()=> {
+    const sum = questions.reduce((accumulator, question) => accumulator + question.points, 0)
+    return sum
+  },[questions])
 
   useEffect(() => {
     fetch("http://localhost:8000/questions")
@@ -81,11 +94,15 @@ function App() {
           />
         )}
         {status === "active" && (
-          <Question
-            question={questions[index]}
-            dispatch={dispatch}
-            answer={answer}
-          />
+          <>
+          <Progress index={index} numberOfQuestions={numberOfQuestions} points={points} totalPoints={totalPoints} />
+            <Question
+              question={questions[index]}
+              dispatch={dispatch}
+              answer={answer}
+            />
+            <NextQuestion dispatch={dispatch} answer={answer} />
+          </>
         )}
       </Main>
     </div>

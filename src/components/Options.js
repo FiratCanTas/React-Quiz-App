@@ -7,12 +7,12 @@ const Options = ({ question, dispatch, answer }) => {
       {question.options.map((option, index) => (
         <button
           key={option}
-          className={`btn btn-option ${
-            hasAnswered && index === answer && "answer"
-          } ${
-            hasAnswered && index === question.correctOption
-              ? "correct"
-              : "wrong"
+          className={`btn btn-option ${index === answer ? "answer" : ""} ${
+            hasAnswered
+              ? index === question.correctOption
+                ? "correct"
+                : "wrong"
+              : ""
           }`}
           onClick={() => dispatch({ type: "newAnswer", payload: index })}
           disabled={hasAnswered}
