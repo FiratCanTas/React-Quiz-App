@@ -137,9 +137,9 @@ const QuizProvider = ({ children }) => {
 };
 
 const useQuiz = () => {
-  const context = useContext("QuizContext");
+  const context = useContext(QuizContext);
   if (context === undefined) {
-    throw new Error("QuizContext was used outside the AuthProvider");
+    throw new Error("QuizContext was used outside the QuizProvider");
   }
 
   return context;
