@@ -1,13 +1,19 @@
-import React from 'react'
+import React from "react";
+import { useQuiz } from "../contexts/QuizContext";
 
-const Progress = ({index, numberOfQuestions, points, totalPoints}) => {
+const Progress = () => {
+  const { index, numberOfQuestions, points, totalPoints } = useQuiz();
   return (
-    <header className='progress'>
+    <header className="progress">
       <progress max={numberOfQuestions} value={index} />
-      <p>Question {index + 1} / {numberOfQuestions}</p>
-      <p>{points} / {totalPoints}</p>
+      <p>
+        Question {index + 1} / {numberOfQuestions}
+      </p>
+      <p>
+        {points} / {totalPoints}
+      </p>
     </header>
-  )
-}
+  );
+};
 
-export default Progress
+export default Progress;
